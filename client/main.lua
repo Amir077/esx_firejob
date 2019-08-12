@@ -71,14 +71,13 @@ function OpenCloakroomMenu()
 		table.insert(elements, {label = _U('fire_wear'), value = 'supervisor_wear'})
 	elseif grade == 'lieutenant' then
 		table.insert(elements, {label = _U('fire_wear'), value = 'lieutenant_wear'})
-	elseif grade == 'chef' then
-		table.insert(elements, {label = _U('fire_wear'), value = 'chef_wear'})
+	elseif grade == 'chief' then
+		table.insert(elements, {label = _U('fire_wear'), value = 'chief_wear'})
 	elseif grade == 'commander' then
 		table.insert(elements, {label = _U('fire_wear'), value = 'commander_wear'})
 	end
 
 	if Config.EnableNonFreemodePeds then
-		table.insert(elements, {label = 'Amir Wear', value = 'freemode_ped', maleModel = 's_m_y_baywatch_01', femaleModel = 's_f_y_baywatch_01'})
         table.insert(elements, {label = 'Fire wear', value = 'freemode_ped', maleModel = 's_m_y_fireman_01', femaleModel = 's_m_y_fireman_01'})
         table.insert(elements, {label = 'EMS wear', value = 'freemode_ped', maleModel = 's_m_m_paramedic_01', femaleModel = 's_f_y_scrubs_01'})
 	end
@@ -180,7 +179,7 @@ function OpenCloakroomMenu()
 			data.current.value == 'senor_wear' or
 			data.current.value == 'supervisor_wear' or
 			data.current.value == 'lieutenant_wear' or
-			data.current.value == 'chef_wear' or
+			data.current.value == 'chief_wear' or
 			data.current.value == 'commander_wear' or
 			data.current.value == 'bullet_wear' or
 			data.current.value == 'gilet_wear'
@@ -606,21 +605,11 @@ function OpenFireActionsMenu()
 			{label = _U('citizen_interaction'), value = 'citizen_interaction'},
 			{label = _U('vehicle_interaction'), value = 'vehicle_interaction'},
 			{label = _U('object_spawner'), value = 'object_spawner'},
-			{label = "Jail Menu", value = 'jail_menu'} -- You add this line
 	}}, function(data, menu)
-	
-	--You add this
 
-        if data.current.value == 'jail_menu' then
-            TriggerEvent("esx-qalle-jail:openJailMenu")
-        end
-
-        --Above This
         if data.current.value == 'citizen_interaction' then
 			local elements = {
 				{label = _U('id_card'), value = 'identity_card'},
-				{label = _U('search'), value = 'body_search'},
-				{label = _U('handcuff'), value = 'handcuff'},
 				{label = _U('drag'), value = 'drag'},
 				{label = _U('put_in_vehicle'), value = 'put_in_vehicle'},
 				{label = _U('out_the_vehicle'), value = 'out_the_vehicle'},
@@ -646,8 +635,6 @@ function OpenFireActionsMenu()
 					elseif action == 'body_search' then
 						TriggerServerEvent('esx_firejob:message', GetPlayerServerId(closestPlayer), _U('being_searched'))
 						OpenBodySearchMenu(closestPlayer)
-					elseif action == 'handcuff' then
-						TriggerServerEvent('esx_firejob:handcuff', GetPlayerServerId(closestPlayer))
 					elseif action == 'drag' then
 						TriggerServerEvent('esx_firejob:drag', GetPlayerServerId(closestPlayer))
 					elseif action == 'put_in_vehicle' then
@@ -675,7 +662,6 @@ function OpenFireActionsMenu()
 			if DoesEntityExist(vehicle) then
 				table.insert(elements, {label = _U('vehicle_info'), value = 'vehicle_infos'})
 				table.insert(elements, {label = _U('pick_lock'), value = 'hijack_vehicle'})
-				table.insert(elements, {label = _U('impound'), value = 'impound'})
 			end
 
 			table.insert(elements, {label = _U('search_database'), value = 'search_database'})
@@ -870,17 +856,6 @@ function OpenBodySearchMenu(player)
 
 				break
 			end
-		end
-
-		table.insert(elements, {label = _U('guns_label')})
-
-		for i=1, #data.weapons, 1 do
-			table.insert(elements, {
-				label    = _U('confiscate_weapon', ESX.GetWeaponLabel(data.weapons[i].name), data.weapons[i].ammo),
-				value    = data.weapons[i].name,
-				itemType = 'item_weapon',
-				amount   = data.weapons[i].ammo
-			})
 		end
 
 		table.insert(elements, {label = _U('inventory_label')})
@@ -1379,9 +1354,9 @@ AddEventHandler('esx_firejob:hasEnteredMarker', function(station, part, partNum)
 		CurrentAction     = 'Helicopters'
 		CurrentActionMsg  = _U('helicopter_prompt')
 		CurrentActionData = {station = station, part = part, partNum = partNum}
-	elseif part == 'BossActions' then
-		CurrentAction     = 'menu_boss_actions'
-		CurrentActionMsg  = _U('open_bossmenu')
+	elseif part == 'ChiefActions' then
+		CurrentAction     = 'menu_chief_actions'
+		CurrentActionMsg  = _U('open_chiefmenu')
 		CurrentActionData = {}
 	end
 end)
@@ -1574,67 +1549,6 @@ AddEventHandler('esx_firejob:OutVehicle', function()
 	TaskLeaveVehicle(playerPed, vehicle, 16)
 end)
 
--- Handcuff
-Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(0)
-		local playerPed = PlayerPedId()
-
-		if IsHandcuffed then
-			DisableControlAction(0, 1, true) -- Disable pan
-			DisableControlAction(0, 2, true) -- Disable tilt
-			DisableControlAction(0, 24, true) -- Attack
-			DisableControlAction(0, 257, true) -- Attack 2
-			DisableControlAction(0, 25, true) -- Aim
-			DisableControlAction(0, 263, true) -- Melee Attack 1
-			DisableControlAction(0, 32, true) -- W
-			DisableControlAction(0, 34, true) -- A
-			DisableControlAction(0, 31, true) -- S
-			DisableControlAction(0, 30, true) -- D
-
-			DisableControlAction(0, 45, true) -- Reload
-			DisableControlAction(0, 22, true) -- Jump
-			DisableControlAction(0, 44, true) -- Cover
-			DisableControlAction(0, 37, true) -- Select Weapon
-			DisableControlAction(0, 23, true) -- Also 'enter'?
-
-			DisableControlAction(0, 288,  true) -- Disable phone
-			DisableControlAction(0, 289, true) -- Inventory
-			DisableControlAction(0, 170, true) -- Animations
-			DisableControlAction(0, 167, true) -- Job
-
-			DisableControlAction(0, 0, true) -- Disable changing view
-			DisableControlAction(0, 26, true) -- Disable looking behind
-			DisableControlAction(0, 73, true) -- Disable clearing animation
-			DisableControlAction(2, 199, true) -- Disable pause screen
-
-			DisableControlAction(0, 59, true) -- Disable steering in vehicle
-			DisableControlAction(0, 71, true) -- Disable driving forward in vehicle
-			DisableControlAction(0, 72, true) -- Disable reversing in vehicle
-
-			DisableControlAction(2, 36, true) -- Disable going stealth
-
-			DisableControlAction(0, 47, true)  -- Disable weapon
-			DisableControlAction(0, 264, true) -- Disable melee
-			DisableControlAction(0, 257, true) -- Disable melee
-			DisableControlAction(0, 140, true) -- Disable melee
-			DisableControlAction(0, 141, true) -- Disable melee
-			DisableControlAction(0, 142, true) -- Disable melee
-			DisableControlAction(0, 143, true) -- Disable melee
-			DisableControlAction(0, 75, true)  -- Disable exit vehicle
-			DisableControlAction(27, 75, true) -- Disable exit vehicle
-
-			if IsEntityPlayingAnim(playerPed, 'mp_arresting', 'idle', 3) ~= 1 then
-				ESX.Streaming.RequestAnimDict('mp_arresting', function()
-					TaskPlayAnim(playerPed, 'mp_arresting', 'idle', 8.0, -8, -1, 49, 0.0, false, false, false)
-				end)
-			end
-		else
-			Citizen.Wait(500)
-		end
-	end
-end)
-
 -- Create blips
 Citizen.CreateThread(function()
 
@@ -1720,17 +1634,17 @@ Citizen.CreateThread(function()
 					end
 				end
 
-				if Config.EnablePlayerManagement and PlayerData.job.grade_name == 'boss' then
-					for i=1, #v.BossActions, 1 do
-						local distance = GetDistanceBetweenCoords(coords, v.BossActions[i], true)
+				if Config.EnablePlayerManagement and PlayerData.job.grade_name == 'chief' then
+					for i=1, #v.ChiefActions, 1 do
+						local distance = GetDistanceBetweenCoords(coords, v.ChiefActions[i], true)
 
 						if distance < Config.DrawDistance then
-							DrawMarker(22, v.BossActions[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
+							DrawMarker(22, v.ChiefActions[i], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 1.0, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, 100, false, true, 2, true, false, false, false)
 							letSleep = false
 						end
 
 						if distance < Config.MarkerSize.x then
-							isInMarker, currentStation, currentPart, currentPartNum = true, k, 'BossActions', i
+							isInMarker, currentStation, currentPart, currentPartNum = true, k, 'ChiefActions', i
 						end
 					end
 				end
@@ -1853,13 +1767,13 @@ Citizen.CreateThread(function()
 					end
 				elseif CurrentAction == 'delete_vehicle' then
 					ESX.Game.DeleteVehicle(CurrentActionData.vehicle)
-				elseif CurrentAction == 'menu_boss_actions' then
+				elseif CurrentAction == 'menu_chief_actions' then
 					ESX.UI.Menu.CloseAll()
-					TriggerEvent('esx_society:openBossMenu', 'fire', function(data, menu)
+					TriggerEvent('esx_society:openChiefMenu', 'fire', function(data, menu)
 						menu.close()
 
-						CurrentAction     = 'menu_boss_actions'
-						CurrentActionMsg  = _U('open_bossmenu')
+						CurrentAction     = 'menu_chief_actions'
+						CurrentActionMsg  = _U('open_chiefmenu')
 						CurrentActionData = {}
 					end, { wash = false }) -- disable washing money
 				elseif CurrentAction == 'remove_entity' then
