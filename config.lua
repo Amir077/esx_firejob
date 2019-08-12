@@ -205,8 +205,3 @@ Config.AuthorizedHelicopters = {
 	}
 }
 
--- CHECK SKINCHANGER CLIENT MAIN.LUA for matching elements
-
-Config.Uniforms = {
-	
-}
