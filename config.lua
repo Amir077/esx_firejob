@@ -67,7 +67,7 @@ Config.FireStations = {
 			}
 		},
 
-		BossActions = {
+		ChiefActions = {
 			vector3(1192.34, -1474.73, 34.86)
 		}
 
@@ -111,7 +111,7 @@ Config.AuthorizedWeapons = {
 		{ weapon = 'WEAPON_FLAREGUN', price = 400 }
 	},
 
-	chef = {
+	chief = {
 		{ weapon = 'WEAPON_FLASHLIGHT', price = 0 },
 		{ weapon = 'WEAPON_FIREEXTINGUISHER', price = 500 },
 		{ weapon = 'WEAPON_FLARE', price = 100 },
@@ -167,7 +167,7 @@ Config.AuthorizedVehicles = {
     	{ model = 'ambulance', label = 'Ambulance Red', price = 5000 }
 	},
 
-	chef = {
+	chief = {
 
 	},
 
@@ -196,7 +196,7 @@ Config.AuthorizedHelicopters = {
 		{ model = 'polmav', label = 'Police Maverick', livery = 0, price = 50000 }
 	},
 
-	chef = {
+	chief = {
 		{ model = 'polmav', label = 'Police Maverick', livery = 0, price = 50000 }
 	},
 
