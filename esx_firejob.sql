@@ -21,6 +21,6 @@ INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_
 	('fire',1,'firefighter','Firefighter',40,'{}','{}'),
 	('fire',2,'senor','Senor',65,'{}','{}'),
 	('fire',3,'lieutenant','Lieutenant',80,'{}','{}'),
-	('fire',4,'commander','Commandant',95,'{}','{}')
+	('fire',4,'chief','Chief',95,'{}','{}')
 ;
 
