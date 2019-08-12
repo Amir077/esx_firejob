@@ -57,17 +57,6 @@ AddEventHandler('esx_firejob:confiscatePlayerItem', function(target, itemType, i
 	end
 end)
 
-RegisterServerEvent('esx_firejob:handcuff')
-AddEventHandler('esx_firejob:handcuff', function(target)
-	local xPlayer = ESX.GetPlayerFromId(source)
-
-	if xPlayer.job.name == 'fire' then
-		TriggerClientEvent('esx_firejob:handcuff', target)
-	else
-		print(('esx_firejob: %s attempted to handcuff a player (not cop)!'):format(xPlayer.identifier))
-	end
-end)
-
 RegisterServerEvent('esx_firejob:drag')
 AddEventHandler('esx_firejob:drag', function(target)
 	local xPlayer = ESX.GetPlayerFromId(source)
