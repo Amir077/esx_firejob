@@ -25,56 +25,28 @@ function cleanPlayer(playerPed)
 	ResetPedMovementClipset(playerPed, 0)
 end
 
-function setUniform(job, playerPed)
-	TriggerEvent('skinchanger:getSkin', function(skin)
-		if skin.sex == 0 then
-			if Config.Uniforms[job].male then
-				TriggerEvent('skinchanger:loadClothes', skin, Config.Uniforms[job].male)
-			else
-				ESX.ShowNotification(_U('no_outfit'))
-			end
-
-			if job == 'bullet_wear' then
-				SetPedArmour(playerPed, 100)
-			end
-		else
-			if Config.Uniforms[job].female then
-				TriggerEvent('skinchanger:loadClothes', skin, Config.Uniforms[job].female)
-			else
-				ESX.ShowNotification(_U('no_outfit'))
-			end
-
-			if job == 'bullet_wear' then
-				SetPedArmour(playerPed, 100)
-			end
-		end
-	end)
-end
-
 function OpenCloakroomMenu()
 	local playerPed = PlayerPedId()
 	local grade = PlayerData.job.grade_name
 
 	local elements = {
-		{ label = _U('citizen_wear'), value = 'citizen_wear' },
-		{ label = _U('bullet_wear'), value = 'bullet_wear' },
-		{ label = _U('gilet_wear'), value = 'gilet_wear' }
+		{ label = _U('citizen_wear'), value = 'citizen_wear' }
 	}
 
 	if grade == 'recruit' then
-		table.insert(elements, {label = _U('fire_wear'), value = 'recruit_wear'})
+		table.insert(elements, {value = 'recruit_wear'})
 	elseif grade == 'firefighter' then
-		table.insert(elements, {label = _U('fire_wear'), value = 'firefighter_wear'})
+		table.insert(elements, {value = 'firefighter_wear'})
 	elseif grade == 'senor' then
-		table.insert(elements, {label = _U('fire_wear'), value = 'senor_wear'})
+		table.insert(elements, {value = 'senor_wear'})
 	elseif grade == 'supervisor' then
-		table.insert(elements, {label = _U('fire_wear'), value = 'supervisor_wear'})
+		table.insert(elements, {value = 'supervisor_wear'})
 	elseif grade == 'lieutenant' then
-		table.insert(elements, {label = _U('fire_wear'), value = 'lieutenant_wear'})
+		table.insert(elements, {value = 'lieutenant_wear'})
 	elseif grade == 'chief' then
-		table.insert(elements, {label = _U('fire_wear'), value = 'chief_wear'})
+		table.insert(elements, {value = 'chief_wear'})
 	elseif grade == 'commander' then
-		table.insert(elements, {label = _U('fire_wear'), value = 'commander_wear'})
+		table.insert(elements, {value = 'commander_wear'})
 	end
 
 	if Config.EnableNonFreemodePeds then
@@ -180,11 +152,9 @@ function OpenCloakroomMenu()
 			data.current.value == 'supervisor_wear' or
 			data.current.value == 'lieutenant_wear' or
 			data.current.value == 'chief_wear' or
-			data.current.value == 'commander_wear' or
-			data.current.value == 'bullet_wear' or
-			data.current.value == 'gilet_wear'
+			data.current.value == 'commander_wear'
 		then
-			setUniform(data.current.value, playerPed)
+		--	setUniform(data.current.value, playerPed)
 		end
 
 		if data.current.value == 'freemode_ped' then
@@ -613,7 +583,6 @@ function OpenFireActionsMenu()
 				{label = _U('drag'), value = 'drag'},
 				{label = _U('put_in_vehicle'), value = 'put_in_vehicle'},
 				{label = _U('out_the_vehicle'), value = 'out_the_vehicle'},
-				{label = _U('fine'), value = 'fine'},
 				{label = _U('unpaid_bills'), value = 'unpaid_bills'}
 			}
 
@@ -632,19 +601,12 @@ function OpenFireActionsMenu()
 
 					if action == 'identity_card' then
 						OpenIdentityCardMenu(closestPlayer)
-					elseif action == 'body_search' then
-						TriggerServerEvent('esx_firejob:message', GetPlayerServerId(closestPlayer), _U('being_searched'))
-						OpenBodySearchMenu(closestPlayer)
 					elseif action == 'drag' then
 						TriggerServerEvent('esx_firejob:drag', GetPlayerServerId(closestPlayer))
 					elseif action == 'put_in_vehicle' then
 						TriggerServerEvent('esx_firejob:putInVehicle', GetPlayerServerId(closestPlayer))
 					elseif action == 'out_the_vehicle' then
 						TriggerServerEvent('esx_firejob:OutVehicle', GetPlayerServerId(closestPlayer))
-					elseif action == 'fine' then
-						OpenFineMenu(closestPlayer)
-					elseif action == 'license' then
-						ShowPlayerLicense(closestPlayer)
 					elseif action == 'unpaid_bills' then
 						OpenUnpaidBillsMenu(closestPlayer)
 					end
@@ -676,7 +638,7 @@ function OpenFireActionsMenu()
 				action  = data2.current.value
 
 				if action == 'search_database' then
-					LookupVehicle()
+	--				LookupVehicle()
 				elseif DoesEntityExist(vehicle) then
 					if action == 'vehicle_infos' then
 						local vehicleData = ESX.Game.GetVehicleProperties(vehicle)
@@ -838,166 +800,6 @@ function OpenIdentityCardMenu(player)
 		}, nil, function(data, menu)
 			menu.close()
 		end)
-	end, GetPlayerServerId(player))
-end
-
-function OpenBodySearchMenu(player)
-	ESX.TriggerServerCallback('esx_firejob:getOtherPlayerData', function(data)
-		local elements = {}
-
-		for i=1, #data.accounts, 1 do
-			if data.accounts[i].name == 'black_money' and data.accounts[i].money > 0 then
-				table.insert(elements, {
-					label    = _U('confiscate_dirty', ESX.Math.Round(data.accounts[i].money)),
-					value    = 'black_money',
-					itemType = 'item_account',
-					amount   = data.accounts[i].money
-				})
-
-				break
-			end
-		end
-
-		table.insert(elements, {label = _U('inventory_label')})
-
-		for i=1, #data.inventory, 1 do
-			if data.inventory[i].count > 0 then
-				table.insert(elements, {
-					label    = _U('confiscate_inv', data.inventory[i].count, data.inventory[i].label),
-					value    = data.inventory[i].name,
-					itemType = 'item_standard',
-					amount   = data.inventory[i].count
-				})
-			end
-		end
-
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'body_search', {
-			title    = _U('search'),
-			align    = 'top-left',
-			elements = elements
-		}, function(data, menu)
-			if data.current.value then
-				TriggerServerEvent('esx_firejob:confiscatePlayerItem', GetPlayerServerId(player), data.current.itemType, data.current.value, data.current.amount)
-				OpenBodySearchMenu(player)
-			end
-		end, function(data, menu)
-			menu.close()
-		end)
-	end, GetPlayerServerId(player))
-end
-
-function OpenFineMenu(player)
-	ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'fine', {
-		title    = _U('fine'),
-		align    = 'top-left',
-		elements = {
-			{label = _U('traffic_offense'), value = 0},
-			{label = _U('minor_offense'),   value = 1},
-			{label = _U('average_offense'), value = 2},
-			{label = _U('major_offense'),   value = 3}
-	}}, function(data, menu)
-		OpenFineCategoryMenu(player, data.current.value)
-	end, function(data, menu)
-		menu.close()
-	end)
-end
-
-function OpenFineCategoryMenu(player, category)
-	ESX.TriggerServerCallback('esx_firejob:getFineList', function(fines)
-		local elements = {}
-
-		for k,fine in ipairs(fines) do
-			table.insert(elements, {
-				label     = ('%s <span style="color:green;">%s</span>'):format(fine.label, _U('armory_item', ESX.Math.GroupDigits(fine.amount))),
-				value     = fine.id,
-				amount    = fine.amount,
-				fineLabel = fine.label
-			})
-		end
-
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'fine_category', {
-			title    = _U('fine'),
-			align    = 'top-left',
-			elements = elements
-		}, function(data, menu)
-			menu.close()
-
-			if Config.EnablePlayerManagement then
-				TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(player), 'society_fire', _U('fine_total', data.current.fineLabel), data.current.amount)
-			else
-				TriggerServerEvent('esx_billing:sendBill', GetPlayerServerId(player), '', _U('fine_total', data.current.fineLabel), data.current.amount)
-			end
-
-			ESX.SetTimeout(300, function()
-				OpenFineCategoryMenu(player, category)
-			end)
-		end, function(data, menu)
-			menu.close()
-		end)
-	end, category)
-end
-
-function LookupVehicle()
-	ESX.UI.Menu.Open('dialog', GetCurrentResourceName(), 'lookup_vehicle',
-	{
-		title = _U('search_database_title'),
-	}, function(data, menu)
-		local length = string.len(data.value)
-		if data.value == nil or length < 2 or length > 13 then
-			ESX.ShowNotification(_U('search_database_error_invalid'))
-		else
-			ESX.TriggerServerCallback('esx_firejob:getVehicleFromPlate', function(owner, found)
-				if found then
-					ESX.ShowNotification(_U('search_database_found', owner))
-				else
-					ESX.ShowNotification(_U('search_database_error_not_found'))
-				end
-			end, data.value)
-			menu.close()
-		end
-	end, function(data, menu)
-		menu.close()
-	end)
-end
-
-function ShowPlayerLicense(player)
-	local elements, targetName = {}
-
-	ESX.TriggerServerCallback('esx_firejob:getOtherPlayerData', function(data)
-		if data.licenses then
-			for i=1, #data.licenses, 1 do
-				if data.licenses[i].label and data.licenses[i].type then
-					table.insert(elements, {
-						label = data.licenses[i].label,
-						type = data.licenses[i].type
-					})
-				end
-			end
-		end
-
-		if Config.EnableESXIdentity then
-			targetName = data.firstname .. ' ' .. data.lastname
-		else
-			targetName = data.name
-		end
-
-		ESX.UI.Menu.Open('default', GetCurrentResourceName(), 'manage_license', {
-			title    = _U('license_revoke'),
-			align    = 'top-left',
-			elements = elements,
-		}, function(data, menu)
-			ESX.ShowNotification(_U('licence_you_revoked', data.current.label, targetName))
-			TriggerServerEvent('esx_firejob:message', GetPlayerServerId(player), _U('license_revoked', data.current.label))
-
-			TriggerServerEvent('esx_license:removeLicense', GetPlayerServerId(player), data.current.type)
-
-			ESX.SetTimeout(300, function()
-				ShowPlayerLicense(player)
-			end)
-		end, function(data, menu)
-			menu.close()
-		end)
-
 	end, GetPlayerServerId(player))
 end
 
@@ -1398,70 +1200,6 @@ AddEventHandler('esx_firejob:hasExitedEntityZone', function(entity)
 	end
 end)
 
-RegisterNetEvent('esx_firejob:handcuff')
-AddEventHandler('esx_firejob:handcuff', function()
-	IsHandcuffed    = not IsHandcuffed
-	local playerPed = PlayerPedId()
-
-	Citizen.CreateThread(function()
-		if IsHandcuffed then
-
-			RequestAnimDict('mp_arresting')
-			while not HasAnimDictLoaded('mp_arresting') do
-				Citizen.Wait(100)
-			end
-
-			TaskPlayAnim(playerPed, 'mp_arresting', 'idle', 8.0, -8, -1, 49, 0, 0, 0, 0)
-
-			SetEnableHandcuffs(playerPed, true)
-			DisablePlayerFiring(playerPed, true)
-			SetCurrentPedWeapon(playerPed, GetHashKey('WEAPON_UNARMED'), true) -- unarm player
-			SetPedCanPlayGestureAnims(playerPed, false)
-			FreezeEntityPosition(playerPed, true)
-			DisplayRadar(false)
-
-			if Config.EnableHandcuffTimer then
-				if HandcuffTimer.active then
-					ESX.ClearTimeout(HandcuffTimer.task)
-				end
-
-				StartHandcuffTimer()
-			end
-		else
-			if Config.EnableHandcuffTimer and HandcuffTimer.active then
-				ESX.ClearTimeout(HandcuffTimer.task)
-			end
-
-			ClearPedSecondaryTask(playerPed)
-			SetEnableHandcuffs(playerPed, false)
-			DisablePlayerFiring(playerPed, false)
-			SetPedCanPlayGestureAnims(playerPed, true)
-			FreezeEntityPosition(playerPed, false)
-			DisplayRadar(true)
-		end
-	end)
-end)
-
-RegisterNetEvent('esx_firejob:unrestrain')
-AddEventHandler('esx_firejob:unrestrain', function()
-	if IsHandcuffed then
-		local playerPed = PlayerPedId()
-		IsHandcuffed = false
-
-		ClearPedSecondaryTask(playerPed)
-		SetEnableHandcuffs(playerPed, false)
-		DisablePlayerFiring(playerPed, false)
-		SetPedCanPlayGestureAnims(playerPed, true)
-		FreezeEntityPosition(playerPed, false)
-		DisplayRadar(true)
-
-		-- end timer
-		if Config.EnableHandcuffTimer and HandcuffTimer.active then
-			ESX.ClearTimeout(HandcuffTimer.task)
-		end
-	end
-end)
-
 RegisterNetEvent('esx_firejob:drag')
 AddEventHandler('esx_firejob:drag', function(copId)
 	if not IsHandcuffed then
@@ -1842,7 +1580,7 @@ AddEventHandler('esx_firejob:updateBlip', function()
 		return
 	end
 
-	-- Is the player a cop? In that case show all the blips for other cops
+	-- Is the player a fire? In that case show all the blips for other fire
 	if PlayerData.job and PlayerData.job.name == 'fire' then
 		ESX.TriggerServerCallback('esx_society:getOnlinePlayers', function(players)
 			for i=1, #players, 1 do
@@ -1886,21 +1624,6 @@ AddEventHandler('onResourceStop', function(resource)
 		end
 	end
 end)
-
--- handcuff timer, unrestrain the player after an certain amount of time
-function StartHandcuffTimer()
-	if Config.EnableHandcuffTimer and HandcuffTimer.active then
-		ESX.ClearTimeout(HandcuffTimer.task)
-	end
-
-	HandcuffTimer.active = true
-
-	HandcuffTimer.task = ESX.SetTimeout(Config.HandcuffTimer, function()
-		ESX.ShowNotification(_U('unrestrained_timer'))
-		TriggerEvent('esx_firejob:unrestrain')
-		HandcuffTimer.active = false
-	end)
-end
 
 -- TODO
 --   - return to garage if owned
