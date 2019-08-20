@@ -64,14 +64,14 @@ Locales['en'] = {
   ['citizen_interaction'] = 'citizen Interaction',
   ['vehicle_interaction'] = 'vehicle Interaction',
   ['object_spawner'] = 'object Spawner',
-
+  --
   ['id_card'] = 'ID Card',
   ['search'] = 'search',
   ['handcuff'] = 'cuff / Uncuff',
   ['drag'] = 'escort',
   ['put_in_vehicle'] = 'put in Vehicle',
   ['out_the_vehicle'] = 'drag out from vehicle',
-\
+  --
   ['unpaid_bills'] = 'manage unpaid bills',
   ['license_check'] = 'manage license',
   ['license_revoke'] = 'revoke license',
@@ -142,12 +142,12 @@ Locales['en'] = {
   ['have_deposited'] = 'you have deposited ~y~%sx~s~ ~b~%s~s~',
   ['quantity'] = 'quantity',
   ['inventory'] = 'inventory',
-  ['Fire_stock'] = 'Fire Stock',
+  ['fire_stock'] = 'Fire Stock',
   -- Misc
   ['remove_prop'] = 'press ~INPUT_CONTEXT~ to delete the object',
   ['map_blip'] = 'Fire Station',
   ['unrestrained_timer'] = 'you feel your handcuffs slowly losing grip and fading away.',
   -- Notifications
-  ['alert_Fire'] = 'Fire alert',
-  ['phone_Fire'] = 'Fire',
+  ['alert_fire'] = 'Fire alert',
+  ['phone_fire'] = 'Fire',
 }
