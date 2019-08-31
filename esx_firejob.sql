@@ -19,7 +19,7 @@ INSERT INTO `jobs` (name, label) VALUES
 INSERT INTO `job_grades` (job_name, grade, name, label, salary, skin_male, skin_female) VALUES
 	('fire',0,'recruit','Recrue',20,'{}','{}'),
 	('fire',1,'firefighter','Firefighter',40,'{}','{}'),
-	('fire',2,'senor','Senor',65,'{}','{}'),
+	('fire',2,'senior','Senior',65,'{}','{}'),
 	('fire',3,'lieutenant','Lieutenant',80,'{}','{}'),
 	('fire',4,'chief','Chief',95,'{}','{}')
 ;
