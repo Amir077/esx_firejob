@@ -37,7 +37,7 @@ function OpenCloakroomMenu()
 		table.insert(elements, {value = 'recruit_wear'})
 	elseif grade == 'firefighter' then
 		table.insert(elements, {value = 'firefighter_wear'})
-	elseif grade == 'senor' then
+	elseif grade == 'senior' then
 		table.insert(elements, {value = 'senor_wear'})
 	elseif grade == 'supervisor' then
 		table.insert(elements, {value = 'supervisor_wear'})
@@ -148,7 +148,7 @@ function OpenCloakroomMenu()
 		if
 			data.current.value == 'recruit_wear' or
 			data.current.value == 'firefighter_wear' or
-			data.current.value == 'senor_wear' or
+			data.current.value == 'senior_wear' or
 			data.current.value == 'supervisor_wear' or
 			data.current.value == 'lieutenant_wear' or
 			data.current.value == 'chief_wear' or
