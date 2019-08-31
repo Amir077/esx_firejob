@@ -90,7 +90,7 @@ Config.AuthorizedWeapons = {
 		{ weapon = 'WEAPON_FLAREGUN', price = 400 }
 	},
 
-	senor = {
+	senior = {
 		{ weapon = 'WEAPON_FLASHLIGHT', price = 0 },
 		{ weapon = 'WEAPON_FIREEXTINGUISHER', price = 500 },
 		{ weapon = 'WEAPON_FLARE', price = 100 },
@@ -149,7 +149,7 @@ Config.AuthorizedVehicles = {
     	{ model = 'ambulance', label = 'Ambulance Red', price = 5000 }
 	},
 
-	senor = {
+	senior = {
 	    { model = 'firevic', label = 'Supervisor Crown Vic', price = 2500 },
 		{ model = 'fireexp', label = 'Senor Ford Explorer', price = 2500 },
 	    { model = 'firetruk', label = 'FireTruck Red', price = 2500 },	
@@ -184,7 +184,7 @@ Config.AuthorizedHelicopters = {
 
 	firefighter = {},
 
-	senor = {
+	senior = {
 	{ model = 'polmav', label = 'Police Maverick', livery = 0, price = 50000 }
 	},
 
